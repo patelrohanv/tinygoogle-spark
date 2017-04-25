@@ -27,10 +27,6 @@ from string import digits
 from string import punctuation
 
 from pyspark import SparkContext
-from pyspark.sql import SQLContext
-from pyspark.sql.types import *
-from pyspark.sql.functions import *
-import argparse
 
 
 if __name__ == "__main__":
