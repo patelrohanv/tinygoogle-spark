@@ -21,6 +21,10 @@ import sys
 from operator import add
 
 from pyspark import SparkContext
+from pyspark.sql import SQLContext
+from pyspark.sql.types import *
+from pyspark.sql.functions import *
+import argparse
 
 
 if __name__ == "__main__":
@@ -28,13 +32,23 @@ if __name__ == "__main__":
         print("Usage: wordcount <file>", file=sys.stderr)
         exit(-1)
     sc = SparkContext(appName="PythonWordCount")
-    #line = sc.textFile("file:///mounted_volume/books/*.txt")
+    line = sc.textFile("file:///mounted_volume/books/*.txt")
     lines = sc.textFile(sys.argv[1], 1)
-    counts = lines.flatMap(lambda x: x.split(' ')) \
-                  .map(lambda x: (x, 1)) \
-                  .reduceByKey(add)
-    output = counts.collect()
-    for (word, count) in output:
-        print("%s: %i" % (word.encode("utf-8"), count))
+    # counts = lines.flatMap(lambda x: x.split(' ')) \
+    #               .map(lambda x: (x, 1)) \
+    #               .reduceByKey(add)
 
+    counts = sc.wholeTextFiles(sys.argv[1], 1)\
+		.flatMap(lambda (name, content): map(lambda word: (word, name), content.split(' ')))\
+		.map(lambda (word, name): ((word, name), 1))\
+		.reduceByKey(lambda count1, count2: count1 + count2)\
+    .map(lambda ((word, name), count): (word, name, count))
+
+    output = counts.collect()
+    for (word, name, count) in output:
+        i = name.find("/books/") + 7
+        j = name.find(".txt")
+        name = name[i:j]
+        print("%s -> %s: %i" % (word.encode("utf-8"), name.encode("utf-8"), count))
+    
     sc.stop()
