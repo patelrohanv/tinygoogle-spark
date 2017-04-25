@@ -17,8 +17,14 @@
 
 from __future__ import print_function
 
+import os
 import sys
 from operator import add
+
+import nltk
+import string
+from string import digits
+from string import punctuation
 
 from pyspark import SparkContext
 from pyspark.sql import SQLContext
@@ -46,9 +52,10 @@ if __name__ == "__main__":
 
     output = counts.collect()
     for (word, name, count) in output:
+        word = word.lower().translate(string.maketrans("",""), string.punctuation).translate(None, digits)
         i = name.find("/books/") + 7
         j = name.find(".txt")
         name = name[i:j]
         print("%s -> %s: %i" % (word.encode("utf-8"), name.encode("utf-8"), count))
-    
+
     sc.stop()
