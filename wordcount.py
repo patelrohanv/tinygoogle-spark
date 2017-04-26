@@ -11,6 +11,7 @@ from operator import add
 import string
 from string import digits
 from string import punctuation
+from string import maketrans
 
 from pyspark import SparkContext
 
@@ -36,7 +37,7 @@ if __name__ == "__main__":
     fileList =[]
 
     for (word, name, count) in output:
-        word = word.lower()
+        word = word.lower().translate(None, string.punctuation)
         i = name.find("/books/") + 7
         j = name.find(".txt")
         name = name[i:j]
