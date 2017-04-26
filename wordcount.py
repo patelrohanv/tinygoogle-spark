@@ -58,14 +58,24 @@ if __name__ == "__main__":
         i = name.find("/books/") + 7
         j = name.find(".txt")
         name = name[i:j]
-        #print("%s -> %s: %i" % (word.encode("utf-8"), name.encode("utf-8"), count))
+
         if word not in ii:
-           ii[word] = [(name, count)]
-           # print("Added new %s" % (word.encode("utf-8")))
-        else:
-            temp = ii[word]
-            temp.append((name, count))
-            ii[word] = temp
+            ii[word] = {}
+            ii[word][name] = count
+        else
+            ii[word][name] = count
+
+
+
+
+        #print("%s -> %s: %i" % (word.encode("utf-8"), name.encode("utf-8"), count))
+        #if word not in ii:
+        #   ii[word] = [(name, count)]
+        #   # print("Added new %s" % (word.encode("utf-8")))
+        #else:
+        #    temp = ii[word]
+        #    temp.append((name, count))
+        #    ii[word] = temp
             # print("Added to %s" % (word.encode("utf-8")))
 
         if name not in fileList:
