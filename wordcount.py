@@ -85,6 +85,7 @@ if __name__ == "__main__":
                     freq = 0                                                                            #initializ freq to zero
                     try:                                                                                #handle exceptions where keyword isnt in file
                         freq = ii[term][fileName]                                                      #calculate frequency of keyword in file
+                        # print ("Term: %s | File: %s| Freq: %i|" % (term, fileName, freq))
                     except KeyError:                                                                    # handle exceptions where keyword isnt in file
                         Results[term][fileName] = 0.000000                                           # handle exceptions where keyword isnt in file
                     if (freq > 0):                                                                      #calculate TF
