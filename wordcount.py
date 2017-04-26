@@ -73,13 +73,15 @@ if __name__ == "__main__":
 
     numFiles = len(fileList)
 
-    while True:
+    loop = True
+
+    while loop:
         search = raw_input("Input search terms (or 'QUIT' to quit): ")
         terms = search.split()
 
         for test in terms:
             if test == 'QUIT':
-                break
+                loop = False
 
         for term in terms:                                                            #loop through keywords
             if term not in Results:                                                          #Only calculate if not already done
