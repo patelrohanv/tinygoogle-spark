@@ -62,7 +62,7 @@ if __name__ == "__main__":
         if word not in ii:
             ii[word] = {}
             ii[word][name] = count
-        else
+        else:
             ii[word][name] = count
 
 
