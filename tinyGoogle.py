@@ -43,11 +43,14 @@ def search (terms):
                     else:                                                                                   # depending on
                         tf = 0                                                                              # Frequency
 
-                    print("FREQ IS: "+(str)freq)
+                    print("")
+                    print("")
+                    print("FILENAME: "+fileName+"___________________")
+                    print("-FREQ IS: "+str(freq))
                     IDF = math.log((float(numFiles) / len(ii[term])), 2)                           #calculate IDF = log2(N/n)
-                    print("IDF IS: "+(str)IDF)
+                    print("--IDF IS: "+str(IDF))
                     weight = tf * IDF                                                                   #calculate weight = TF * IDF
-                    print("WEIGHT IS: "+(str)weight)
+                    print("---WEIGHT IS: "+str(weight))
                     Results[term][fileName] = weight                                                 #add weight for keyword, file
             else:                                                                               #Handle cases where
                 print("____________IS NOT IN II")
