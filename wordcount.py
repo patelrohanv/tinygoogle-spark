@@ -32,7 +32,7 @@ from string import punctuation
 from pyspark import SparkContext
 
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
+    if len(sys.argv) < 2:
         print("Usage: wordcount <file>", file=sys.stderr)
         exit(-1)
     sc = SparkContext(appName="PythonWordCount")
@@ -85,8 +85,10 @@ if __name__ == "__main__":
 
     loop = True
 
+
+
     while loop:
-        search = raw_input("Input search terms (or 'QUIT' to quit): ")
+        search = sys.argv[2]
         terms = search.split()
 
         for test in terms:
