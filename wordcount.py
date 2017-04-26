@@ -85,7 +85,7 @@ if __name__ == "__main__":
                     freq = 0                                                                            #initializ freq to zero
                     try:                                                                                #handle exceptions where keyword isnt in file
                         freq = ii[term][fileName]                                                      #calculate frequency of keyword in file
-                        # print ("Term: %s | File: %s| Freq: %i|" % (term, fileName, freq))
+                        print ("Term: %s | File: %s| Freq: %i" % (term, fileName, freq))
                     except KeyError:                                                                    # handle exceptions where keyword isnt in file
                         Results[term][fileName] = 0.000000                                           # handle exceptions where keyword isnt in file
                     if (freq > 0):                                                                      #calculate TF
@@ -106,8 +106,8 @@ if __name__ == "__main__":
     for searchTerm in Results.keys():
         termResults = Results[term]
         sortedTermResults = sorted(termResults, key=lambda x: termResults.values())
-        print (searchTerm + "_____________________________")
+        print ("Term: %s" % (searchTerm))
         for doc in termResults.keys():
-            print ("----Document: "+ doc)
-            print ("------------Weight: "+str(termResults[doc]))
+            print ("\tDocument: %s" % (doc))
+            print ("\t\tWeight: %s" % (termResults[doc]))
     sc.stop()
