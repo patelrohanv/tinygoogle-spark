@@ -37,8 +37,7 @@ if __name__ == "__main__":
     fileList =[]
 
     for (word, name, count) in output:
-        replace_punctuation = string.maketrans(string.punctuation, ' '*len(string.punctuation))
-        word = word.lower().translate(replace_punctuation))
+        word = re.sub('[^a-zA-Z]+', '', word.lower())
         i = name.find("/books/") + 7
         j = name.find(".txt")
         name = name[i:j]
