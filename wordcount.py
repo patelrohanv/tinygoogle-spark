@@ -59,10 +59,10 @@ if __name__ == "__main__":
     terms = search.split()
 
     for testWord in ii.keys():
-        print('Word: '+testWord)
+        print('Word: #%s# ' % testWord.encode("utf-8"))
         for testDoc in ii[testWord].keys():
-            print('\tDoc: '+testDoc)
-            print('\t\tCount: '+(str)ii[testWord][testDoc])
+            print('\tDoc: '+testDoc.encode("utf-8"))
+            print('\t\tCount: '+ str(ii[testWord][testDoc]))
 
 
     for term in terms:                                                            #loop through keywords
@@ -81,6 +81,7 @@ if __name__ == "__main__":
                         tf = 0                                                                              # Frequency
                     IDF = math.log((float(numFiles) / len(ii[term])), 2)                           #calculate IDF = log2(N/n)
                     weight = tf * IDF                                                                   #calculate weight = TF * IDF
+                    print (weight)
                     Results[term][fileName] = weight                                                 #add weight for keyword, file
             else:                                                                               #Handle cases where
                 for fileName in fileList:                                                           # keyword isnt in
