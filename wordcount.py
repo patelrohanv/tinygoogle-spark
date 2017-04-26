@@ -49,9 +49,10 @@ if __name__ == "__main__":
         else:
             #print("updated count for: %s to ii with word %s and to new count %i" % (name.encode("utf-8"), word.encode("utf-8"), count))
             if name not in ii[word]:
-                ii[word][name] = 0
-            old = ii[word][name]
-            ii[word][name] = count+old
+                ii[word][name] = count
+            else:
+                old = ii[word][name]
+                ii[word][name] = count+old
 
     numFiles = len(fileList)
     Results = {}
