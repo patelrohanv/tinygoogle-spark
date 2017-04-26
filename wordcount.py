@@ -15,6 +15,16 @@ from string import maketrans
 
 from pyspark import SparkContext
 
+def cleanFile (name):
+    i = name.find("/books/") + 7
+    j = name.find(".txt")
+    name = name[i:j]
+    return name
+
+def cleanWord (word):
+    word= re.sub('[^a-zA-Z]+', '', word.lower())
+    return word
+
 if __name__ == "__main__":
     if len(sys.argv) < 2:
         print("Usage: wordcount <file>", file=sys.stderr)
@@ -26,9 +36,15 @@ if __name__ == "__main__":
     #               .map(lambda x: (x, 1)) \
     #               .reduceByKey(add)
 
+    # counts = sc.wholeTextFiles(sys.argv[1], 1)\
+	# 	.flatMap(lambda (name, content): map(lambda word: (word, name), content.split(' ')))\
+	# 	.map(lambda (word, name): ((word, name), 1))\
+	# 	.reduceByKey(lambda count1, count2: count1 + count2)\
+    #   .map(lambda ((word, name), count): (word, name, count))
+
     counts = sc.wholeTextFiles(sys.argv[1], 1)\
 		.flatMap(lambda (name, content): map(lambda word: (word, name), content.split(' ')))\
-		.map(lambda (word, name): ((word, name), 1))\
+		.map(lambda (word, name): ((cleanWord(word), cleanFile (name)), 1))\
 		.reduceByKey(lambda count1, count2: count1 + count2)\
         .map(lambda ((word, name), count): (word, name, count))
 
@@ -37,10 +53,6 @@ if __name__ == "__main__":
     fileList =[]
 
     for (word, name, count) in output:
-        word = re.sub('[^a-zA-Z]+', '', word.lower())
-        i = name.find("/books/") + 7
-        j = name.find(".txt")
-        name = name[i:j]
 
         if word not in ii:
             #print("Added %s to ii with word %s and count %i" % (name.encode("utf-8"), word.encode("utf-8"), count))
