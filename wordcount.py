@@ -71,15 +71,15 @@ if __name__ == "__main__":
         if name not in fileList:
             fileList.append(name)
 
-    ii['fileList'] = fileList
+    numFiles = len(fileList)
 
-
-    while true:
+    while True:
         search = raw_input("Input search terms (or 'QUIT' to quit): ")
         terms = search.split()
 
-        if search == 'QUIT':
-            break
+        for test in terms:
+            if test == 'QUIT':
+                break
 
         for term in terms:                                                            #loop through keywords
             if term not in Results:                                                          #Only calculate if not already done
