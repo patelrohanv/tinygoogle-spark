@@ -24,60 +24,86 @@ def cleanWord (word):
 def search (terms):
     global quit
     for term in terms:                                                            #loop through keywords
-        if term == ':q':
+        if term == ':q' or term == ':Q':
             quit = True
             break
-        term = cleanWord(term)
-        if term not in Results:                                                          #Only calculate if not already done
-            if term in ii:                                                                 # Only calculate if keyword in any file
-                Results[term] = {}                                                               #Create Results dict
-                for fileName in fileList:                                                           #Loop through files
-                    freq = 0                                                                            #initializ freq to zero
-                    try:                                                                                #handle exceptions where keyword isnt in file
-                        freq = ii[term][fileName]                                                      #calculate frequency of keyword in file
-                    except KeyError:                                                                    # handle exceptions where keyword isnt in file
-                        Results[term][fileName] = 0.000000                                           # handle exceptions where keyword isnt in file
-                        print("KEY ERROR, assigning weight=0")
-                    if (freq > 0):                                                                      #calculate TF
-                        tf = 1 + math.log(freq, 2)                                                          # as 1+log2(freq) or 0
-                    else:                                                                                   # depending on
-                        tf = 0                                                                              # Frequency
+    if not quit:
+        print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+        print("\tPlease wait while the search is completed ... ")
+        print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+        for term in terms:                                                            #loop through keywords
+            term = cleanWord(term)
+            if term not in Results:                                                          #Only calculate if not already done
+                if term in ii:                                                                 # Only calculate if keyword in any file
+                    Results[term] = {}                                                               #Create Results dict
+                    for fileName in fileList:                                                           #Loop through files
+                        freq = 0                                                                            #initializ freq to zero
+                        try:                                                                                #handle exceptions where keyword isnt in file
+                            freq = ii[term][fileName]                                                      #calculate frequency of keyword in file
+                        except KeyError:                                                                    # handle exceptions where keyword isnt in file
+                            Results[term][fileName] = [0.000000, 0.000000]                                           # handle exceptions where keyword isnt in file
+                        if (freq > 0):                                                                      #calculate TF
+                            tf = 1 + math.log(freq, 2)                                                          # as 1+log2(freq) or 0
+                        else:                                                                                   # depending on
+                            tf = 0                                                                              # Frequency
 
-                    print("")
-                    print("")
-                    print("FILENAME: "+fileName+"___________________")
-                    print("-FREQ IS: "+str(freq))
-                    IDF = math.log((float(numFiles) / len(ii[term])), 2)                           #calculate IDF = log2(N/n)
-                    print("--IDF IS: "+str(IDF))
-                    weight = tf * IDF                                                                   #calculate weight = TF * IDF
-                    print("---WEIGHT IS: "+str(weight))
-                    Results[term][fileName] = weight                                                 #add weight for keyword, file
-            else:                                                                               #Handle cases where
-                print("____________IS NOT IN II")
-                for fileName in fileList:                                                           # keyword isnt in
-                    if term not in Results:                                                          # any file
-                        Results[term] = {fileName : 0.000000}                                             # if first time
-                    else:                                                                               #
-                        Results[term][fileName] = 0.000000                                               # if already in results for some file
+                        IDF = math.log((float(numFiles) / len(ii[term])), 2)                           #calculate IDF = log2(N/n)
+                        weight = tf * IDF                                                                   #calculate weight = TF * IDF
+                        Results[term][fileName] = [weight, freq]                                                 #add weight for keyword, file
+                else:                                                                               #Handle cases where
+                    for fileName in fileList:                                                           # keyword isnt in
+                        if term not in Results:                                                          # any file
+                            Results[term] = {fileName : [0.000000, 0.000000]}                                             # if first time
+                        else:                                                                               #
+                            Results[term][fileName] = [0.000000,0.000000]                                               # if already in results for some file
 
-    for searchTerm in Results.keys():
-        termResults = Results[term]
-        sortedTermResults = sorted(termResults, key=lambda x: termResults.values())
-        print (searchTerm + "_____________________________")
-        for doc in termResults.keys():
-            print ("----Document: "+ doc)
-            print ("------------Weight: "+str(termResults[doc]))
+        for searchTerm in Results.keys():
+            termResults = Results[term]
+            sortedTermResults = sorted(termResults, key=lambda x: termResults.values()[0])
+            print("\nThe term \""+term+"\" is found in:\n")
+            print("--------------------------------------------------------------------")
+            for doc in termResults.keys():
+                print ("Document: "+ doc)
+                print ("Weight:\t\t"+str(termResults[doc][0]))
+                print ("Frequency:\t"+str(termResults[doc][1]))
+                print("--------------------------------------------------------------------")
+            print("____________________________________________________________________")
 
 if __name__ == "__main__":
+    print("____________________________________________________________________");
+    print("\t\tWelcome to tiny-Google");
+    print("\tBy Salvatore Avena and Rohan Patel");
+    print("____________________________________________________________________");
     indexFile = './inverted-index.json'
 
     ii = {}
     fileList =[]
+    build = True
+
     if os.path.isfile(indexFile):
-        print("Using existing index")
-    else:
-        print("ABOUT TO BUILD INDEX")
+        while True:
+            indexResponse = raw_input("An index already exists on disk.\nWould you like to use the existing index or create a new one?\n\t1. Use the existing index\n\t2. Create a new one\n")
+            if int(indexResponse) == 1:
+                print("Ok, existing index will be used.")
+                build = False
+                break
+            elif int(indexResponse) == 2:
+                print("Ok, existing index will be deleted.")
+                build = True
+                break
+            else:
+                print("Not a valid option. Please try again.\n")
+        print("____________________________________________________________________")
+
+    if build:
+        print("____________________________________________________________________")
+        print("Creating New Index.");
+        print("____________________________________________________________________")
+        print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+        print("\tPlease wait while the index is generated ... ");
+        print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
         os.system('spark-submit file:///mounted_volume/indexer.py file:///mounted_volume/books/*.txt')
+        print("____________________________________________________________________")
 
     with open(indexFile, "r+") as f:
         ii = json.load(f)
@@ -87,6 +113,10 @@ if __name__ == "__main__":
 
     while not quit:
         Results = {}
-        searchTerms = raw_input("Enter your search terms (or ':q' to quit): ")
+        searchTerms = raw_input("Enter a search query (or ':q' to quit): ")
         terms = searchTerms.split()
         search(terms)
+
+print("____________________________________________________________________")
+print("Goodbye!")
+print("____________________________________________________________________")
