@@ -58,14 +58,16 @@ def search (terms):
                             Results[term][fileName] = [0.000000,0.000000]                                               # if already in results for some file
 
         for searchTerm in Results.keys():
-            termResults = Results[term]
-            sortedTermResults = sorted(termResults, key=lambda x: termResults.values()[0])
-            print("\nThe term \""+term+"\" is found in:\n")
+            termResults = Results[searchTerm]
+            sortedTermResults = termResults
+            #sortedTermResults = sorted(termResults, key=lambda x: termResults.values()[1][0])
+            #print (sortedTermResults)
+            print("\n\t\tThe term \""+searchTerm+"\" is found in:\n")
             print("--------------------------------------------------------------------")
-            for doc in termResults.keys():
-                print ("Document: "+ doc)
-                print ("Weight:\t\t"+str(termResults[doc][0]))
-                print ("Frequency:\t"+str(termResults[doc][1]))
+            for doc in sortedTermResults.keys():
+                print ("Document: "+ re.sub(r"(?<=\w)([A-Z]|by|of|and)", r" \1", doc))
+                print ("Weight:\t\t"+str(sortedTermResults[doc][0]))
+                print ("Frequency:\t"+str(sortedTermResults[doc][1]))
                 print("--------------------------------------------------------------------")
             print("____________________________________________________________________")
 
@@ -85,10 +87,16 @@ if __name__ == "__main__":
             indexResponse = raw_input("An index already exists on disk.\nWould you like to use the existing index or create a new one?\n\t1. Use the existing index\n\t2. Create a new one\n")
             if int(indexResponse) == 1:
                 print("Ok, existing index will be used.")
+                print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+                print("\tPlease wait ... ");
+                print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
                 build = False
                 break
             elif int(indexResponse) == 2:
                 print("Ok, existing index will be deleted.")
+                print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+                print("\tPlease wait ... ");
+                print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
                 build = True
                 break
             else:
