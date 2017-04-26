@@ -74,7 +74,7 @@ if __name__ == "__main__":
         print("Using existing index")
     else:
         print("ABOUT TO BUILD INDEX")
-        os.system('spark-submit file:///mounted_volume/wordcount.py file:///mounted_volume/books/*.txt')
+        os.system('spark-submit file:///mounted_volume/indexer.py file:///mounted_volume/books/*.txt')
 
     with open(indexFile, "r+") as f:
         ii = json.load(f)
