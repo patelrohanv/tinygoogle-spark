@@ -48,11 +48,10 @@ if __name__ == "__main__":
             ii[word][name] = count
         else:
             #print("updated count for: %s to ii with word %s and to new count %i" % (name.encode("utf-8"), word.encode("utf-8"), count))
-            if name not in ii[word]:
-                ii[word][name] = count
-            else:
-                old = ii[word][name]
-                ii[word][name] = count+old
+            ii[word][name] = count
+
+        if name not in fileList:
+            fileList.append(name)
 
     numFiles = len(fileList)
     Results = {}
@@ -82,7 +81,7 @@ if __name__ == "__main__":
                         tf = 0                                                                              # Frequency
                     IDF = math.log((float(numFiles) / len(ii[term])), 2)                           #calculate IDF = log2(N/n)
                     weight = tf * IDF                                                                   #calculate weight = TF * IDF
-                    #print (weight)
+                    # print (weight)
                     Results[term][fileName] = weight                                                 #add weight for keyword, file
             else:                                                                               #Handle cases where
                 for fileName in fileList:                                                           # keyword isnt in
