@@ -32,15 +32,6 @@ if __name__ == "__main__":
     sc = SparkContext(appName="PythonWordCount")
     line = sc.textFile("file:///mounted_volume/books/*.txt")
     lines = sc.textFile(sys.argv[1], 1)
-    # counts = lines.flatMap(lambda x: x.split(' ')) \
-    #               .map(lambda x: (x, 1)) \
-    #               .reduceByKey(add)
-
-    # counts = sc.wholeTextFiles(sys.argv[1], 1)\
-	# 	.flatMap(lambda (name, content): map(lambda word: (word, name), content.split(' ')))\
-	# 	.map(lambda (word, name): ((word, name), 1))\
-	# 	.reduceByKey(lambda count1, count2: count1 + count2)\
-    #   .map(lambda ((word, name), count): (word, name, count))
 
     counts = sc.wholeTextFiles(sys.argv[1], 1)\
 		.flatMap(lambda (name, content): map(lambda word: (word, name), content.split(' ')))\
@@ -69,13 +60,6 @@ if __name__ == "__main__":
     Results = {}
     search = sys.argv[2]
     terms = search.split()
-
-    # for testWord in ii.keys():
-    #     print('Word: #%s# ' % testWord.encode("utf-8"))
-    #     for testDoc in ii[testWord].keys():
-    #         print('\tDoc: '+testDoc.encode("utf-8"))
-    #         print('\t\tCount: '+ str(ii[testWord][testDoc]))
-
 
     for term in terms:                                                            #loop through keywords
         if term not in Results:                                                          #Only calculate if not already done
