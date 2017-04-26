@@ -21,13 +21,11 @@ import os
 import sys
 from operator import add
 
-import nltk
 import string
 from string import digits
 from string import punctuation
 
 from pyspark import SparkContext
-
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
@@ -48,7 +46,7 @@ if __name__ == "__main__":
 
     output = counts.collect()
     for (word, name, count) in output:
-        word = word.lower().translate(string.maketrans("",""), string.punctuation).translate(None, digits)
+        word = word.lower()
         i = name.find("/books/") + 7
         j = name.find(".txt")
         name = name[i:j]
